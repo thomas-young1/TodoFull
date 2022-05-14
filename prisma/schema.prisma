@@ -1,0 +1,35 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model tag {
+  tag_id       String       @id @db.Uuid
+  owner_id     String       @db.Uuid
+  name         String       @db.VarChar(200)
+  user_account user_account @relation(fields: [owner_id], references: [account_id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model task {
+  task_id        String       @id @db.Uuid
+  due            DateTime?    @db.Timestamptz(6)
+  parent_task_id String?      @db.Uuid
+  name           String       @db.VarChar(200)
+  owner_id       String       @db.Uuid
+  priority       Int          @default(0) @db.SmallInt
+  user_account   user_account @relation(fields: [owner_id], references: [account_id], onDelete: Cascade, onUpdate: NoAction)
+  task           task?        @relation("taskTotask_parent_task_id", fields: [parent_task_id], references: [task_id], onDelete: Cascade, onUpdate: NoAction)
+  other_task     task[]       @relation("taskTotask_parent_task_id")
+}
+
+model user_account {
+  account_id String @id(map: "UserAccount_pkey") @db.Uuid
+  email      String @db.VarChar(200)
+  password   String @db.VarChar(200)
+  tag        tag[]
+  task       task[]
+}
