@@ -1,8 +1,14 @@
 import type { NextPage } from "next";
-import Navbar from "../components/navbar";
+import Body from "../components/Body";
+import Navbar from "../components/Navbar";
 
 const Home: NextPage = () => {
-	return <Navbar />;
+	return (
+		<>
+			<Navbar />
+			<Body />
+		</>
+	);
 };
 
 export default Home;

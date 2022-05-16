@@ -1,0 +1,21 @@
+.sidebar {
+	background-color: #ededed;
+	width: 150px;
+	height: 100vh;
+}
+
+.heading {
+	font-weight: bold;
+	font-size: 1.5rem;
+	padding-left: 10px;
+	padding-top: 15px;
+}
+
+.views a {
+	display: block;
+	margin: 0;
+	padding-left: 25px;
+	padding-top: 10px;
+	text-decoration: none;
+	color: black;
+}
