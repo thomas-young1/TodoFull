@@ -12,13 +12,15 @@ model User {
   email    String @unique
   password String
   tags     Tag[]
+  tasks    Task[]
 }
 
 model Task {
-  task_id  Int       @id @default(autoincrement())
-  name     String
-  priority Int       @default(0) /// Value between 0-3 denoting priority of task
-  due      DateTime?
+  task_id     Int       @id @default(autoincrement())
+  name        String
+  priority    Int       @default(0) /// Value between 0-3 denoting priority of task
+  due         DateTime?
+  description String?
 
   tag    Tag? @relation(fields: [tag_id], references: [tag_id])
   tag_id Int?
@@ -26,6 +28,9 @@ model Task {
   parent_task    Task?  @relation("Subtasks", fields: [parent_task_id], references: [task_id])
   parent_task_id Int?
   subtasks       Task[] @relation("Subtasks")
+
+  owner    User? @relation(fields: [owner_id], references: [user_id])
+  owner_id Int?
 }
 
 model Tag {

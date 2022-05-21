@@ -2,19 +2,20 @@
 	background-color: #ededed;
 	width: 150px;
 	height: 100vh;
+	flex-shrink: 0;
 }
 
 .heading {
 	font-weight: bold;
 	font-size: 1.5rem;
-	padding-left: 10px;
+	padding-left: 30px;
 	padding-top: 15px;
 }
 
 .views a {
 	display: block;
 	margin: 0;
-	padding-left: 25px;
+	padding-left: 45px;
 	padding-top: 10px;
 	text-decoration: none;
 	color: black;

@@ -1,0 +1,40 @@
+.taskWrapper {
+	width: 100%;
+	margin: 0 150px;
+}
+
+.addTask {
+	width: 100%;
+	height: 60px;
+	display: grid;
+	grid-template-columns: 0.1fr 3fr 1fr 1fr;
+	gap: 15px;
+	padding: 0 15px;
+	align-items: center;
+	/* outline: 1px solid red; */
+}
+
+.addButton {
+	border: none;
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	font-size: 2.5rem;
+	justify-self: center;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+}
+
+.addText {
+	border: none;
+	height: 25px;
+	margin: 0 10px;
+	border-bottom: 1px solid rgb(98, 98, 98);
+	font-size: 1rem;
+}
+
+.addText:focus {
+	outline: none;
+}
