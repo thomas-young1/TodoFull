@@ -21,10 +21,14 @@
 	border-radius: 50%;
 	font-size: 2.5rem;
 	justify-self: center;
+	cursor: pointer;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	cursor: pointer;
+}
+
+.addIcon {
+	color: red;
 }
 
 .addText {
@@ -37,4 +41,17 @@
 
 .addText:focus {
 	outline: none;
+}
+
+.addDue {
+	font-family: sans-serif;
+	height: 25px;
+	border: none;
+	border-bottom: 1px solid rgb(98, 98, 98);
+}
+
+.addTag {
+	height: 25px;
+	border: none;
+	border-bottom: 1px solid rgb(98, 98, 98);
 }

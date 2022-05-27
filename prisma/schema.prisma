@@ -7,12 +7,58 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
 model User {
-  user_id  Int    @id @default(autoincrement())
-  email    String @unique
-  password String
-  tags     Tag[]
-  tasks    Task[]
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  profile       Profile?
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Profile {
+  tasks   Task[]
+  tags    Tag[]
+  user    User   @relation(fields: [user_id], references: [id])
+  user_id String @unique
+
 }
 
 model Task {
@@ -29,14 +75,14 @@ model Task {
   parent_task_id Int?
   subtasks       Task[] @relation("Subtasks")
 
-  owner    User? @relation(fields: [owner_id], references: [user_id])
-  owner_id Int?
+  owner    Profile @relation(fields: [owner_id], references: [user_id])
+  owner_id String
 }
 
 model Tag {
-  tag_id  Int    @id @default(autoincrement())
-  name    String @unique
-  user    User?  @relation(fields: [user_id], references: [user_id])
-  user_id Int?
-  tasks   Task[]
+  tag_id   Int     @id @default(autoincrement())
+  name     String  @unique
+  owner    Profile @relation(fields: [owner_id], references: [user_id])
+  owner_id String
+  tasks    Task[]
 }

@@ -68,3 +68,9 @@
 	color: black;
 	margin-left: 5px;
 }
+
+.logo {
+	cursor: pointer;
+}
+
+/* TODO: Flexbox doesn't work within button in Safari, wrap with div? */
