@@ -12,6 +12,7 @@ type Props = {
 const Navbar: React.FC<Props> = ({ isTaskView }: Props) => {
 	const [dropdown, setDropdown] = useState(false);
 
+	// TODO: Figure out conditional rendering of search bar and how to format
 	return (
 		<div className={styles.navbar}>
 			<Link href="/">
@@ -39,6 +40,6 @@ const Navbar: React.FC<Props> = ({ isTaskView }: Props) => {
 		</div>
 	);
 };
-// TODO: functionality of search, add, profile
+// TODO: functionality of search, add
 
 export default Navbar;

@@ -15,6 +15,7 @@ interface Props {
 	};
 }
 
+// TODO: Style and finalize user auth situation
 const Login: NextPage<Props> = ({ providers }) => {
 	const { data: session } = useSession();
 	const router = useRouter();

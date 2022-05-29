@@ -1,19 +1,18 @@
 import { GetServerSideProps, NextPage } from "next";
 import { useSession, getSession } from "next-auth/react";
-import { useRouter } from "next/router";
+import Router from "next/router";
 import Navbar from "../components/Navbar";
 import { prisma } from "../db";
 import type { tagList } from "./index";
 
 interface Props extends tagList {}
 
+// Style and finish features of settings page -> edit/add tags to account, delete account, change info (?)
 const settings: NextPage<Props> = ({ tagList }: Props) => {
-	const router = useRouter();
-
 	useSession({
 		required: true,
 		onUnauthenticated() {
-			router.push("/auth/login");
+			Router.push("/auth/login");
 		},
 	});
 
@@ -65,7 +64,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 		}
 	}
 
-	console.log(tagList ? tagList : "not found");
 	return {
 		props: {
 			tagList: tagList ? tagList : "",

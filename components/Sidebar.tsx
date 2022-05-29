@@ -6,7 +6,11 @@ interface Props extends tagList {}
 
 const Sidebar: React.FC<Props> = (props: Props) => {
 	const tagObjs = props.tagList.tags.map((tag) => {
-		return <Link href="/">{tag.name}</Link>;
+		return (
+			<Link href="/" key={tag.tag_id}>
+				{tag.name}
+			</Link>
+		);
 	});
 
 	return (
@@ -22,7 +26,7 @@ const Sidebar: React.FC<Props> = (props: Props) => {
 		</div>
 	);
 };
-// TODO: Load user's tags in and style
-// TODO: Make all links functional, implement different views
+// TODO: Style user's tags
+// TODO: Make all links functional, implement different views for tasks
 
 export default Sidebar;

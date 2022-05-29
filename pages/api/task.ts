@@ -19,17 +19,24 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 	});
 
 	if (req.method === "POST") {
-		const { name, due, tag, priority } = req.body;
-		const newTask = await prisma.task.create({
-			data: {
-				name: name,
-				due: new Date(due),
-				tag_id: parseInt(tag),
-				priority: priority,
-				owner_id: userId && userId.id ? userId.id : "",
-			},
-		});
-		res.status(200).json({ newTask });
+		try {
+			const { name, due, tag, priority } = req.body;
+			const newTask = await prisma.task.create({
+				data: {
+					name: name,
+					due: new Date(due),
+					tag_id: parseInt(tag),
+					priority: priority,
+					owner_id: userId && userId.id ? userId.id : "",
+				},
+			});
+			console.log(newTask);
+			res.status(201).json({ newTask });
+		} catch (err) {
+			res.status(500).json({
+				message: "Something went wrong while trying to create task",
+			});
+		}
 	}
 };
 

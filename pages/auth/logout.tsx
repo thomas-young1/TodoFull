@@ -1,17 +1,16 @@
 import { NextPage } from "next";
 import { signOut, useSession } from "next-auth/react";
-import { useRouter } from "next/router";
+import Router from "next/router";
 
 const logout: NextPage = () => {
-	const router = useRouter();
-
-	const { data: session } = useSession({
+	useSession({
 		required: true,
 		onUnauthenticated() {
-			router.push("/auth/login");
+			Router.push("/auth/login");
 		},
 	});
 
+	// TODO: Style logout
 	return (
 		<div>
 			<button onClick={() => signOut()}>Log out</button>

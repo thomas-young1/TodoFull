@@ -1,0 +1,15 @@
+.wrapper {
+	display: flex;
+	align-items: center;
+	background-color: #e2e2e2;
+	/* TODO: figure out color for widgets */
+	border-radius: 5px;
+	padding: 3px 5px;
+}
+
+.icon {
+	display: inline;
+	height: 20px;
+	width: 20px;
+	margin-right: 5px;
+}
