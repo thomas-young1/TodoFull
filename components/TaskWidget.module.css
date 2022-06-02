@@ -1,8 +1,7 @@
 .wrapper {
 	display: flex;
 	align-items: center;
-	background-color: #e2e2e2;
-	/* TODO: figure out color for widgets */
+	background-color: #ededed;
 	border-radius: 5px;
 	padding: 3px 5px;
 }

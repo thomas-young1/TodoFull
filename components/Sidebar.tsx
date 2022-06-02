@@ -1,11 +1,11 @@
 import styles from "./Sidebar.module.css";
-import type { tagList } from "../pages/index";
 import Link from "next/link";
+import { TagContainer } from "../containers/TagContainer";
 
-interface Props extends tagList {}
+const Sidebar: React.FC = () => {
+	const tagPortal = TagContainer.useContainer();
 
-const Sidebar: React.FC<Props> = (props: Props) => {
-	const tagObjs = props.tagList.tags.map((tag) => {
+	const tagObjs = tagPortal.tagList.map((tag) => {
 		return (
 			<Link href="/" key={tag.tag_id}>
 				{tag.name}
@@ -16,13 +16,19 @@ const Sidebar: React.FC<Props> = (props: Props) => {
 	return (
 		<div className={styles.sidebar}>
 			<div className={styles.heading}>Views</div>
-			<div className={styles.views}>
-				<a href="">Inbox</a>
-				<a href="">Week</a>
-				<a href="">All</a>
+			<div className={styles.sub}>
+				<Link href="/">
+					<a>Inbox</a>
+				</Link>
+				<Link href="/">
+					<a>Week</a>
+				</Link>
+				<Link href="/">
+					<a>All</a>
+				</Link>
 			</div>
 			<div className={styles.heading}>Tags</div>
-			<div className={styles.views}>{tagObjs}</div>
+			<div className={styles.sub}>{tagObjs}</div>
 		</div>
 	);
 };

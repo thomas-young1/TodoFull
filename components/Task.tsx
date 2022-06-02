@@ -1,7 +1,10 @@
 import styles from "./Task.module.css";
-import { useEffect, useState } from "react";
-import { isEqual, format, getWeek, isTomorrow } from "date-fns";
+import { format, getWeek, isTomorrow, isAfter, isSameDay } from "date-fns";
 import TaskWidget from "./TaskWidget";
+import { MdEdit } from "react-icons/md";
+import { BsTrashFill } from "react-icons/bs";
+import Router from "next/router";
+import { TodoContainer } from "../containers/TodoContainer";
 
 export type Props = {
 	task: {
@@ -10,10 +13,12 @@ export type Props = {
 		priority: number;
 		due?: string;
 		description?: string;
+		status: string;
 		tag_id?: number;
 		parent_task_id?: number;
 		owner_id: string;
 	};
+	tagName?: string;
 };
 
 export enum taskWidgetType {
@@ -22,27 +27,8 @@ export enum taskWidgetType {
 	subtasks = "subtasks",
 }
 
-const Task: React.FC<Props> = ({ task }: Props) => {
-	// Get and set tag name for each task (if it has a tag)
-	const [tagName, setTagName] = useState("");
-
-	useEffect(() => {
-		if (task.tag_id) {
-			getTag();
-		}
-	}, []);
-
-	// TODO: Instead of fetching tag names for each thing get all info at top level getServerSideProps and pass into components
-	const getTag = async () => {
-		const request = await fetch(`api/tag/${task.tag_id}`, {
-			method: "GET",
-			headers: {
-				"Content-Type": "application/json",
-			},
-		});
-		const nameOfTag = await request.json();
-		setTagName(nameOfTag);
-	};
+const Task: React.FC<Props> = ({ task, tagName }: Props) => {
+	const taskPortal = TodoContainer.useContainer();
 
 	// Format date
 	let dueString;
@@ -50,24 +36,20 @@ const Task: React.FC<Props> = ({ task }: Props) => {
 		const dueDate = new Date(task.due);
 		const now = new Date();
 		// if same day, return time
-		if (isEqual(dueDate, now)) {
-			dueString = format(dueDate, "h':'mm aa");
+		if (isSameDay(dueDate, now)) {
+			dueString = format(dueDate, "'Today, 'h':'mm aa");
 		}
 		// if next day, return tomorrow
 		else if (isTomorrow(dueDate)) {
-			dueString = "Tomorrow";
+			dueString = format(dueDate, "'Tomorrow, 'h':'mm aa");
 		}
 		// if same week, return day
-		else if (getWeek(dueDate) === getWeek(now)) {
-			dueString = format(dueDate, "EEEE");
-		}
-		// if next week, return next week
-		else if (getWeek(dueDate) === getWeek(now) + 1) {
-			dueString = "Next week";
+		else if (getWeek(dueDate) === getWeek(now) && isAfter(dueDate, now)) {
+			dueString = format(dueDate, "EEEE', 'h':'mm aa");
 		}
 		// if greater than 1 week away or in the past, return date in mm/dd/yyyy format
 		else {
-			dueString = format(dueDate, "M'/'d'/'yyyy");
+			dueString = format(dueDate, "M'/'d'/'yyyy', 'h':'mm aa");
 		}
 	}
 
@@ -87,31 +69,48 @@ const Task: React.FC<Props> = ({ task }: Props) => {
 		}
 	}
 
-	// TODO: Allow tasks to be completed, add status attribute to task database (how tf did I miss that)
+	const editTaskRedirect = () => {
+		Router.push(`/edit/${task.task_id}`);
+	};
+
+	// TODO: Allow tasks to be completed
 	return (
-		<div className={styles.wrapper}>
-			<button
-				className={styles.completeButton}
-				style={priorityClass}
-			></button>
-			<span>{task.name}</span>
-			{task.due && (
-				<TaskWidget
-					task={task}
-					type={taskWidgetType.due}
-					formattedDate={dueString}
-					key={taskWidgetType.due}
-				/>
-			)}
-			{task.tag_id && (
-				<TaskWidget
-					task={task}
-					type={taskWidgetType.tag}
-					tagName={tagName}
-					key={taskWidgetType.tag}
-				/>
-			)}
-		</div>
+		<>
+			<div className={styles.wrapper}>
+				<button
+					className={styles.completeButton}
+					style={priorityClass}
+				></button>
+				<span>{task.name}</span>
+				{task.due && (
+					<TaskWidget
+						task={task}
+						type={taskWidgetType.due}
+						formattedDate={dueString}
+						key={taskWidgetType.due}
+					/>
+				)}
+				{task.tag_id && (
+					<TaskWidget
+						task={task}
+						type={taskWidgetType.tag}
+						tagName={tagName}
+						key={taskWidgetType.tag}
+					/>
+				)}
+				<div className={styles.interactionIcons}>
+					<MdEdit
+						className={styles.editIcon}
+						onClick={editTaskRedirect}
+					/>
+					<BsTrashFill
+						className={styles.trashIcon}
+						onClick={() => taskPortal.deleteTask(task)}
+					/>
+				</div>
+			</div>
+			<hr className={styles.rule} />
+		</>
 	);
 };
 

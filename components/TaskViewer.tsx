@@ -1,25 +1,46 @@
 import styles from "./TaskViewer.module.css";
-import type { tagList, taskList } from "../pages/index";
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import Task from "./Task";
+import { TagContainer } from "../containers/TagContainer";
+import { TodoContainer } from "../containers/TodoContainer";
+import type { Tag, Task as TaskProps } from "../pages";
+import { isBefore, isAfter } from "date-fns";
 
-interface Props extends tagList, taskList {}
+const TaskViewer: React.FC = () => {
+	const tagPortal = TagContainer.useContainer();
+	const taskPortal = TodoContainer.useContainer();
 
-type taskProps = {
-	newTask: {
-		task_id: number;
-		name: string;
-		priority: number;
-		due?: string;
-		description?: string;
-		tag_id?: number;
-		parent_task_id?: number;
-		owner_id: string;
+	const getSetUserTasks = async () => {
+		const request = await fetch("/api/task", {
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+			},
+		});
+		const response = await request.json();
+		const userTasks: TaskProps[] = response.userTasks;
+
+		taskPortal.setTaskList(userTasks);
 	};
-};
 
-const TaskViewer: React.FC<Props> = (props: Props) => {
-	const tagOpts = props.tagList.tags.map((tag) => {
+	const getSetUserTags = async () => {
+		const request = await fetch("/api/tag", {
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+			},
+		});
+		const response = await request.json();
+		const userTags: Tag[] = response.userTags;
+		tagPortal.setTagList(userTags);
+	};
+
+	useEffect(() => {
+		getSetUserTasks();
+		getSetUserTags();
+	}, []);
+
+	const tagOpts = tagPortal.tagList.map((tag) => {
 		return (
 			<option value={tag.tag_id} key={tag.tag_id}>
 				{tag.name}
@@ -27,18 +48,36 @@ const TaskViewer: React.FC<Props> = (props: Props) => {
 		);
 	});
 
-	const taskObj = props.taskList.map((task) => {
+	const createTaskElement = (task: TaskProps): JSX.Element => {
+		const tagId = task.tag_id;
+
+		if (task.tag_id) {
+			let tagName;
+			for (const tag of tagPortal.tagList) {
+				if (tag.tag_id === tagId) {
+					tagName = tag.name;
+				}
+			}
+			return <Task task={task} key={task.task_id} tagName={tagName} />;
+		}
+
 		return <Task task={task} key={task.task_id} />;
+	};
+
+	const taskObj = taskPortal.taskList.map((task) => {
+		return createTaskElement(task);
 	});
 
-	const [form, setForm] = useState({
+	const [form, setForm] = useState<
+		Omit<TaskProps, "parent_task_id" | "owner_id" | "task_id">
+	>({
 		name: "",
-		due: "",
-		tag: -1,
 		priority: 0,
+		due: undefined,
+		description: undefined,
+		status: "Incomplete",
+		tag_id: -1,
 	});
-
-	const [taskList, setTaskList] = useState(taskObj);
 
 	const handleChange = (
 		e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -51,32 +90,20 @@ const TaskViewer: React.FC<Props> = (props: Props) => {
 
 	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		const newTask = await fetch("/api/task", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify(form),
-		});
-		const newTaskData: taskProps = await newTask.json();
+
+		taskPortal.addTask(form);
+
 		setForm({
 			name: "",
-			due: "",
-			tag: -1,
 			priority: 0,
+			due: undefined,
+			description: undefined,
+			status: "Incomplete",
+			tag_id: -1,
 		});
-		console.log("New Task:", newTaskData);
-		setTaskList((prevTaskList) => [
-			...prevTaskList,
-			<Task
-				task={newTaskData.newTask}
-				key={newTaskData.newTask.task_id}
-			/>,
-		]);
-		console.log("Task list:", taskList);
 	};
 
-	// TODO: Change create task interface, make similar to design of tasks already made and add ways to create description, priority, subtasks (?) on main level
+	// TODO: Change create task interface, add ways to create description, priority, subtasks (?) on main level
 	return (
 		<div className={styles.taskWrapper}>
 			<h3>Inbox</h3>
@@ -103,9 +130,9 @@ const TaskViewer: React.FC<Props> = (props: Props) => {
 					onChange={handleChange}
 					name="tag"
 					className={styles.addTag}
-					defaultValue="addATag"
+					defaultValue="-1"
 				>
-					<option disabled value="addATag">
+					<option disabled value="-1">
 						Add a tag
 					</option>
 					{tagOpts}

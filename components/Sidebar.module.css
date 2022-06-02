@@ -1,8 +1,9 @@
 .sidebar {
 	background-color: #ededed;
-	width: 150px;
+	width: 175px;
 	height: 100vh;
 	flex-shrink: 0;
+	position: fixed;
 }
 
 .heading {
@@ -12,11 +13,12 @@
 	padding-top: 15px;
 }
 
-.views a {
+.sub > a {
 	display: block;
 	margin: 0;
 	padding-left: 45px;
 	padding-top: 10px;
+	padding-right: 10px;
 	text-decoration: none;
 	color: black;
 }

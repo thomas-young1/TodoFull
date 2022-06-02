@@ -67,6 +67,7 @@ model Task {
   priority    Int       @default(0) /// Value between 0-3 denoting priority of task
   due         DateTime?
   description String?
+  status      String    @default("Incomplete")
 
   tag    Tag? @relation(fields: [tag_id], references: [tag_id])
   tag_id Int?
