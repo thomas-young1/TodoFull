@@ -15,13 +15,16 @@
 	margin-right: 25px;
 }
 
-.completeButton {
+.completeButtonUnchecked {
 	border: 2px solid black;
 	border-radius: 50%;
 	height: 30px;
 	width: 30px;
 	background-color: transparent;
 	cursor: pointer;
+}
+
+.completeButtonChecked {
 }
 
 .interactionIcons {

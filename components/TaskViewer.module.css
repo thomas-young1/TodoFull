@@ -2,6 +2,7 @@
 	width: 100%;
 	margin-right: 150px;
 	margin-left: 300px;
+	margin-bottom: 50px;
 }
 
 .addTask {
@@ -9,10 +10,12 @@
 	height: 60px;
 	display: grid;
 	grid-template-columns: 0.1fr 3fr 1fr 1fr;
-	gap: 15px;
+	grid-template-rows: 1fr 1fr 1fr;
+	column-gap: 15px;
+	row-gap: 15px;
 	align-items: center;
-	/* outline: 1px solid red; */
 	margin-top: 25px;
+	margin-bottom: 50px;
 }
 
 .addButton {
@@ -33,7 +36,6 @@
 .addText {
 	border: none;
 	height: 25px;
-	/* margin: 0 10px; */
 	border-bottom: 1px solid rgb(98, 98, 98);
 	font-size: 1rem;
 }
@@ -48,10 +50,39 @@
 	border: none;
 	border-bottom: 1px solid rgb(98, 98, 98);
 	min-width: 75px;
+	width: 100%;
 }
 
 .addTag {
 	height: 25px;
 	border: none;
 	border-bottom: 1px solid rgb(98, 98, 98);
+	grid-area: 1 / 4;
+}
+
+.addDescription {
+	grid-column-start: span 4;
+	width: 100%;
+	height: 50px;
+	font-family: sans-serif;
+	text-indent: 5px;
+	resize: none;
+}
+
+.priority {
+	grid-column-start: span 4;
+}
+
+.addPriority {
+	display: inline;
+}
+
+.addPriority input {
+	margin-left: 15px;
+}
+
+.priorityLabel {
+	margin: 0;
+	padding: 0;
+	display: inline-block;
 }

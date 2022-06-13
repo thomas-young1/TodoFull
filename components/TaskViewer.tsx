@@ -4,7 +4,10 @@ import Task from "./Task";
 import { TagContainer } from "../containers/TagContainer";
 import { TodoContainer } from "../containers/TodoContainer";
 import type { Tag, Task as TaskProps } from "../pages";
-import { isBefore, isAfter } from "date-fns";
+import Datetime from "react-datepicker";
+import { formatDate } from "./Task";
+
+import "react-datepicker/dist/react-datepicker.css";
 
 const TaskViewer: React.FC = () => {
 	const tagPortal = TagContainer.useContainer();
@@ -49,9 +52,8 @@ const TaskViewer: React.FC = () => {
 	});
 
 	const createTaskElement = (task: TaskProps): JSX.Element => {
-		const tagId = task.tag_id;
-
 		if (task.tag_id) {
+			const tagId = task.tag_id;
 			let tagName;
 			for (const tag of tagPortal.tagList) {
 				if (tag.tag_id === tagId) {
@@ -80,12 +82,25 @@ const TaskViewer: React.FC = () => {
 	});
 
 	const handleChange = (
-		e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
+		e: ChangeEvent<
+			HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+		>
 	) => {
-		setForm({
-			...form,
-			[e.target.name]: e.target.value,
-		});
+		if (e.target.name === "tag_id" || e.target.name === "priority") {
+			setForm({
+				...form,
+				[e.target.name]: parseInt(e.target.value),
+			});
+		} else {
+			setForm({
+				...form,
+				[e.target.name]: e.target.value,
+			});
+		}
+	};
+
+	const handleDateChange = (date: Date) => {
+		setForm({ ...form, due: date.toString() });
 	};
 
 	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -97,13 +112,12 @@ const TaskViewer: React.FC = () => {
 			name: "",
 			priority: 0,
 			due: undefined,
-			description: undefined,
+			description: "",
 			status: "Incomplete",
 			tag_id: -1,
 		});
 	};
 
-	// TODO: Change create task interface, add ways to create description, priority, subtasks (?) on main level
 	return (
 		<div className={styles.taskWrapper}>
 			<h3>Inbox</h3>
@@ -119,25 +133,79 @@ const TaskViewer: React.FC = () => {
 					name="name"
 					value={form.name}
 				/>
-				<input
-					type="datetime-local"
-					onChange={handleChange}
-					name="due"
-					value={form.due}
+				<Datetime
+					showTimeSelect
+					onChange={handleDateChange}
+					value={form.due ? formatDate(form.due) : undefined}
+					placeholderText="Select a due date"
 					className={styles.addDue}
+					name="due"
 				/>
 				<select
 					onChange={handleChange}
-					name="tag"
+					name="tag_id"
 					className={styles.addTag}
-					defaultValue="-1"
+					value={form.tag_id}
 				>
-					<option disabled value="-1">
+					<option disabled value={-1}>
 						Add a tag
 					</option>
 					{tagOpts}
 				</select>
+				<textarea
+					className={styles.addDescription}
+					placeholder="Description"
+					name="description"
+					onChange={handleChange}
+					value={form.description}
+				></textarea>
+				<div className={styles.priority}>
+					<span className={styles.priorityLabel}>Priority:</span>
+					<div className={styles.addPriority}>
+						<label>
+							<input
+								type="radio"
+								name="priority"
+								value={0}
+								checked={form.priority === 0}
+								onChange={handleChange}
+							/>
+							None
+						</label>
+						<label>
+							<input
+								type="radio"
+								name="priority"
+								value={1}
+								checked={form.priority === 1}
+								onChange={handleChange}
+							/>
+							Low
+						</label>
+						<label>
+							<input
+								type="radio"
+								name="priority"
+								value={2}
+								checked={form.priority === 2}
+								onChange={handleChange}
+							/>
+							Medium
+						</label>
+						<label>
+							<input
+								type="radio"
+								name="priority"
+								value={3}
+								checked={form.priority === 3}
+								onChange={handleChange}
+							/>
+							High
+						</label>
+					</div>
+				</div>
 			</form>
+			<div></div>
 		</div>
 	);
 };

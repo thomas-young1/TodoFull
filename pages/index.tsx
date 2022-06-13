@@ -35,8 +35,6 @@ export type Tag = {
 	owner_id: string;
 };
 
-interface Props extends tagList, taskList {}
-
 const Home: NextPage = () => {
 	const { data: session, status } = useSession({
 		required: true,
