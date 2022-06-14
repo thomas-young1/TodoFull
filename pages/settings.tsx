@@ -1,72 +1,103 @@
-import { GetServerSideProps, NextPage } from "next";
-import { useSession, getSession } from "next-auth/react";
+import { NextPage } from "next";
+import { signOut, useSession } from "next-auth/react";
 import Router from "next/router";
 import Navbar from "../components/Navbar";
-import { prisma } from "../db";
-import type { tagList } from "./index";
+import Head from "next/head";
+import { TagContainer } from "../containers/TagContainer";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import styles from "../styles/settings.module.css";
 
-interface Props extends tagList {}
+import { MdEdit } from "react-icons/md";
+import { BsTrashFill } from "react-icons/bs";
 
-// Style and finish features of settings page -> edit/add tags to account, delete account, change info (?)
-const settings: NextPage<Props> = ({ tagList }: Props) => {
-	useSession({
+// Style and finish features of settings page -> edit/add tags to account, delete account
+const settings: NextPage = () => {
+	const { data: session, status } = useSession({
 		required: true,
 		onUnauthenticated() {
 			Router.push("/auth/login");
 		},
 	});
+	const tagPortal = TagContainer.useContainer();
 
-	const tagObjs = tagList.tags.map((tag) => {
-		return (
-			<div>
-				<h1>{tag.name}</h1>
-			</div>
-		);
-	});
+	useEffect(() => {
+		tagPortal.getSetTagList();
+	}, []);
+
+	let tagObjs;
+
+	if (status === "authenticated") {
+		tagObjs = tagPortal.tagList.map((tag) => {
+			return (
+				<div className={styles.tagCardWrapper} key={tag.tag_id}>
+					<div className={styles.tagCard}>
+						<p>{tag.name}</p>
+						<div className={styles.interactionIcons}>
+							<MdEdit className={styles.editIcon} />
+							<BsTrashFill
+								className={styles.trashIcon}
+								onClick={() => tagPortal.deleteTag(tag)}
+							/>
+						</div>
+					</div>
+					<hr className={styles.rule} />
+				</div>
+			);
+		});
+	}
+
+	const [form, setForm] = useState({ name: "" });
+
+	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+		setForm({ name: e.target.value });
+	};
+
+	const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+		tagPortal.addTag(form);
+		setForm({ name: "" });
+	};
+
+	const deleteAccount = async () => {
+		signOut();
+		await fetch("/api/auth/user", {
+			method: "DELETE",
+		});
+	};
+
+	if (status === "loading") {
+		return <></>;
+	}
 
 	return (
 		<>
+			<Head>
+				<title>Settings - Todofull</title>
+			</Head>
 			<Navbar isTaskView={false} />
-			<h1>Settings</h1>
-			<h2>Tags</h2>
-			{tagObjs}
+			<div className={styles.wrapper}>
+				<h1>Settings</h1>
+				<h2>Tags</h2>
+				<div className={styles.tagWrapper}>{tagObjs}</div>
+				<form onSubmit={handleSubmit}>
+					<div className={styles.taskCreatorWrapper}>
+						<button className={styles.addButton}>+</button>
+						<input
+							type="text"
+							onChange={handleChange}
+							value={form.name}
+							className={styles.addName}
+							placeholder="Add a tag"
+						/>
+					</div>
+				</form>
+				<h2 className={styles.accountHeader}>Account</h2>
+				<button className={styles.deleteButton} onClick={deleteAccount}>
+					Delete account
+				</button>
+			</div>
 		</>
 	);
 };
 
 export default settings;
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-	const session = await getSession(context);
-	let userId;
-	let tagList;
-
-	if (session && session.user && session.user.email) {
-		userId = await prisma.user.findUnique({
-			where: {
-				email: session.user.email,
-			},
-			select: {
-				id: true,
-			},
-		});
-
-		userId = userId ? userId.id : undefined;
-		if (userId) {
-			tagList = await prisma.profile.findUnique({
-				where: {
-					user_id: userId,
-				},
-				select: {
-					tags: true,
-				},
-			});
-		}
-	}
-
-	return {
-		props: {
-			tagList: tagList ? tagList : "",
-		},
-	};
-};

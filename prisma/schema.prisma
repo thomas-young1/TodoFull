@@ -56,7 +56,7 @@ model VerificationToken {
 model Profile {
   tasks   Task[]
   tags    Tag[]
-  user    User   @relation(fields: [user_id], references: [id])
+  user    User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
   user_id String @unique
 
 }
@@ -76,14 +76,14 @@ model Task {
   parent_task_id Int?
   subtasks       Task[] @relation("Subtasks")
 
-  owner    Profile @relation(fields: [owner_id], references: [user_id])
+  owner    Profile @relation(fields: [owner_id], references: [user_id], onDelete: Cascade)
   owner_id String
 }
 
 model Tag {
   tag_id   Int     @id @default(autoincrement())
   name     String  @unique
-  owner    Profile @relation(fields: [owner_id], references: [user_id])
+  owner    Profile @relation(fields: [owner_id], references: [user_id], onDelete: Cascade)
   owner_id String
   tasks    Task[]
 }

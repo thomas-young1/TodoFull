@@ -97,7 +97,7 @@ const TaskViewer: React.FC = () => {
 
 	return (
 		<div className={styles.taskWrapper}>
-			<h3>Inbox</h3>
+			<h1>Inbox</h1>
 			{taskObj}
 			<form className={styles.addTask} onSubmit={handleSubmit}>
 				<button className={styles.addButton} type="submit">

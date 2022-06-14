@@ -91,7 +91,7 @@ const Task: React.FC<Props> = ({ task, tagName }: Props) => {
 
 	// TODO: Allow tasks to be completed
 	return (
-		<>
+		<div className={styles.taskWrapper}>
 			<div className={styles.wrapper}>
 				<button
 					className={styles.completeButtonUnchecked}
@@ -127,7 +127,7 @@ const Task: React.FC<Props> = ({ task, tagName }: Props) => {
 				</div>
 			</div>
 			<hr className={styles.rule} />
-		</>
+		</div>
 	);
 };
 

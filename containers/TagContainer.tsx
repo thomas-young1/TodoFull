@@ -5,11 +5,9 @@ import { createContainer } from "unstated-next";
 export const useTags = () => {
 	const [tagList, setTagList] = useState<Tag[]>([]);
 
-	const addTag = async (tag: Tag): Promise<Tag> => {
-		setTagList((prevTagList) => {
-			return [...prevTagList, tag];
-		});
-
+	const addTag = async (
+		tag: Omit<Tag, "tag_id" | "owner_id">
+	): Promise<Tag> => {
 		const request = await fetch("/api/tag", {
 			method: "POST",
 			headers: {
@@ -17,7 +15,12 @@ export const useTags = () => {
 			},
 			body: JSON.stringify(tag),
 		});
-		return await request.json();
+		const response = await request.json();
+		const newTag: Tag = response.newTag;
+		setTagList((prevTagList) => {
+			return [...prevTagList, newTag];
+		});
+		return newTag;
 	};
 
 	const updateTag = async (tag: Tag): Promise<Tag> => {
