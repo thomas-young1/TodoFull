@@ -1,15 +1,40 @@
-.taskWrapper {
-	width: 100%;
-	margin-right: 150px;
-	margin-left: 300px;
-	margin-bottom: 50px;
+.wrapper {
+	margin: 0 150px;
+}
+
+.editorWrapper {
+	display: grid;
+	grid-template-columns: 3fr 1fr 1fr;
+	grid-template-rows: 0.5fr 1fr 0.5fr 0.5fr;
+	gap: 15px;
+}
+
+.updateButton {
+	border: none;
+	background-color: #7d3ad1;
+	color: white;
+	border-radius: 5px;
+	height: 35px;
+	font-size: 1rem;
+	cursor: pointer;
+	grid-area: 4/1;
+}
+
+.cancelButton {
+	grid-column-start: 2;
+	grid-column-end: 4;
+	border: none;
+	font-size: 1rem;
+	border-radius: 5px;
+	height: 35px;
+	cursor: pointer;
 }
 
 .addTask {
 	width: 100%;
 	height: 60px;
 	display: grid;
-	grid-template-columns: 0.1fr 3fr 1fr 1fr;
+	grid-template-columns: 3fr 1fr 1fr;
 	grid-template-rows: 1fr 2fr 1fr;
 	gap: 15px;
 	align-items: center;
@@ -17,26 +42,11 @@
 	margin-bottom: 50px;
 }
 
-.addButton {
-	border: 2px solid #7d3ad1;
-	background-color: transparent;
-	width: 30px;
-	height: 30px;
-	border-radius: 50%;
-	font-size: 2rem;
-	color: #7d3ad1;
-	justify-self: left;
-	cursor: pointer;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-}
-
 .addText {
 	border: none;
 	height: 25px;
 	border-bottom: 1px solid rgb(98, 98, 98);
-	font-size: 0.9rem;
+	font-size: 1rem;
 }
 
 .addText:focus {
@@ -55,18 +65,17 @@
 	min-width: 75px;
 	width: 100%;
 	padding-left: 22px;
-	font-size: 0.9rem;
 }
 
 .addDueIconWrapper {
+	height: 100%;
 	display: flex;
 	align-items: center;
-	height: 100%;
 }
 
 .addDueIcon {
-	height: 18px;
 	width: 18px;
+	height: 18px;
 	position: absolute;
 	z-index: 50;
 }
@@ -75,20 +84,18 @@
 	display: flex;
 }
 
-.addTag {
-	height: 25px;
-	border: none;
-	border-bottom: 1px solid rgb(98, 98, 98);
-	grid-area: 1 / 4;
-	width: 100%;
-	padding-left: 20px;
-	font-size: 0.9rem;
-}
-
 .addTagIconWrapper {
 	display: flex;
 	align-items: center;
 	height: 100%;
+}
+
+.addTag {
+	height: 25px;
+	border: none;
+	border-bottom: 1px solid rgb(98, 98, 98);
+	width: 100%;
+	padding-left: 20px;
 }
 
 .addTagIcon {
@@ -99,7 +106,7 @@
 }
 
 .addDescription {
-	grid-column-start: span 4;
+	grid-column-start: span 3;
 	width: 100%;
 	height: 50px;
 	font-family: sans-serif;
@@ -108,7 +115,7 @@
 }
 
 .priority {
-	grid-column-start: span 4;
+	grid-column-start: span 3;
 }
 
 .addPriority {

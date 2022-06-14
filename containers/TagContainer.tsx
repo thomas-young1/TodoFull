@@ -50,12 +50,25 @@ export const useTags = () => {
 		});
 	};
 
+	const getSetTagList = async () => {
+		const request = await fetch("/api/tag", {
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+			},
+		});
+		const response = await request.json();
+		const userTags: Tag[] = response.userTags;
+		setTagList(userTags);
+	};
+
 	return {
 		tagList,
 		setTagList,
 		addTag,
 		updateTag,
 		deleteTag,
+		getSetTagList,
 	};
 };
 export const TagContainer = createContainer(useTags);

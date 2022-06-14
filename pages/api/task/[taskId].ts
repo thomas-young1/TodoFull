@@ -50,6 +50,7 @@ const handler = async (req: ExtendedApiRequest, res: NextApiResponse) => {
 			});
 			res.status(201).json({ updatedTask });
 		} catch (err) {
+			console.log(err);
 			res.status(500).json({
 				message: "Something went wrong when trying to update task",
 			});

@@ -2,6 +2,9 @@ import { GetServerSideProps, NextPage } from "next";
 import { getProviders, signIn } from "next-auth/react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+import styles from "../../styles/login.module.css";
+import { FcGoogle } from "react-icons/fc";
+import Head from "next/head";
 
 interface Props {
 	providers: {
@@ -16,7 +19,7 @@ interface Props {
 }
 
 // TODO: Style and finalize user auth situation
-const Login: NextPage<Props> = ({ providers }) => {
+const Login: NextPage<Props> = ({ providers }: Props) => {
 	const { data: session } = useSession();
 	const router = useRouter();
 	if (session) {
@@ -25,14 +28,30 @@ const Login: NextPage<Props> = ({ providers }) => {
 	} else {
 		return (
 			<>
-				<h1>Login</h1>
-				{Object.values(providers).map((provider) => (
-					<div key={provider.name}>
-						<button onClick={() => signIn(provider.id)}>
-							Sign in with {provider.name}
-						</button>
+				<Head>
+					<title>Todofull</title>
+				</Head>
+				<div className={styles.wrapper}>
+					<div className={styles.leftColumn}>
+						<h1>Welcome to Todofull</h1>
 					</div>
-				))}
+					<div className={styles.rightColumn}>
+						<h3>
+							Increase your productivity today with a free account
+						</h3>
+						{Object.values(providers).map((provider) => (
+							<div key={provider.name}>
+								<button
+									className={styles.googleButton}
+									onClick={() => signIn(provider.id)}
+								>
+									<FcGoogle className={styles.googleIcon} />
+									Continue with {provider.name}
+								</button>
+							</div>
+						))}
+					</div>
+				</div>
 			</>
 		);
 	}

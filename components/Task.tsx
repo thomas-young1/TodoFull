@@ -27,6 +27,11 @@ export enum taskWidgetType {
 	subtasks = "subtasks",
 }
 
+/**
+ * Translates a datestring provided to plainer text
+ * @param date a date string to convert to plainer text
+ * @returns a plain text representation of a datestring
+ */
 export const formatDate = (date: string) => {
 	let dueString: string;
 	const dueDate = new Date(date);
@@ -61,17 +66,14 @@ const Task: React.FC<Props> = ({ task, tagName }: Props) => {
 
 	let priorityClass = {};
 	switch (task.priority) {
-		// @ts-ignore
 		case 1: {
 			priorityClass = { border: "2px solid #2EB27B" };
 			break;
 		}
-		// @ts-ignore
 		case 2: {
 			priorityClass = { border: "2px solid #FFC635" };
 			break;
 		}
-		// @ts-ignore
 		case 3: {
 			priorityClass = { border: "2px solid #FF4343" };
 			break;

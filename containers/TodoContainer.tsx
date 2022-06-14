@@ -2,6 +2,23 @@ import { useState } from "react";
 import type { Task } from "../pages/index";
 import { createContainer } from "unstated-next";
 
+const sortTasks = (tasks: Task[]): Task[] => {
+	const noDueTasks = tasks.filter((task) => !task.due);
+	const dueTasks = tasks.filter((task) => task.due);
+
+	const sortedTasks = dueTasks.sort((a, b) => {
+		if (a.due && b.due) {
+			const date1 = new Date(a.due);
+			const date2 = new Date(b.due);
+			if (date1.getTime() < date2.getTime()) return -1;
+			else if (date1.getTime() > date2.getTime()) return 1;
+			else return 0;
+		}
+		return 0;
+	});
+	return sortedTasks.concat(noDueTasks);
+};
+
 export const useTodos = () => {
 	const [taskList, setTaskList] = useState<Task[]>([]);
 
@@ -17,26 +34,35 @@ export const useTodos = () => {
 		});
 		const newTaskData = await request.json();
 		setTaskList((prevTaskList) => {
-			return [...prevTaskList, newTaskData.newTask];
+			prevTaskList.push(newTaskData.newTask);
+			return sortTasks(prevTaskList);
 		});
 		return newTaskData.newTask;
 	};
 
-	const updateTask = async (task: Task): Promise<Task> => {
+	const updateTask = async (task: Omit<Task, "owner_id">): Promise<Task> => {
+		const fixedTask = {
+			...task,
+			due: task.due ? new Date(task.due) : undefined,
+		};
+
 		const request = await fetch(`/api/task/${task.task_id}`, {
 			method: "PUT",
 			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify(task),
+			body: JSON.stringify(fixedTask),
 		});
+
 		const updatedTaskData = await request.json();
 		const updatedTask: Task = updatedTaskData.updatedTask;
+
 		setTaskList((prevTaskList) => {
 			const updatedIndex = prevTaskList.findIndex(
 				(taskElement) => taskElement.task_id === updatedTask.task_id
 			);
 			prevTaskList[updatedIndex] = updatedTask;
-			return prevTaskList;
+			return sortTasks(prevTaskList);
 		});
+
 		return updatedTask;
 	};
 
@@ -52,12 +78,26 @@ export const useTodos = () => {
 		});
 	};
 
+	const getSetTaskList = async (): Promise<void> => {
+		const request = await fetch("/api/task", {
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+			},
+		});
+		const response = await request.json();
+		const userTasks: Task[] = response.userTasks;
+
+		setTaskList(sortTasks(userTasks));
+	};
+
 	return {
 		taskList,
 		setTaskList,
 		addTask,
 		updateTask,
 		deleteTask,
+		getSetTaskList,
 	};
 };
 

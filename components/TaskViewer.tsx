@@ -6,6 +6,8 @@ import { TodoContainer } from "../containers/TodoContainer";
 import type { Tag, Task as TaskProps } from "../pages";
 import Datetime from "react-datepicker";
 import { formatDate } from "./Task";
+import { AiTwotoneTag } from "react-icons/ai";
+import { BiCalendarAlt } from "react-icons/bi";
 
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -13,34 +15,9 @@ const TaskViewer: React.FC = () => {
 	const tagPortal = TagContainer.useContainer();
 	const taskPortal = TodoContainer.useContainer();
 
-	const getSetUserTasks = async () => {
-		const request = await fetch("/api/task", {
-			method: "GET",
-			headers: {
-				"Content-Type": "application/json",
-			},
-		});
-		const response = await request.json();
-		const userTasks: TaskProps[] = response.userTasks;
-
-		taskPortal.setTaskList(userTasks);
-	};
-
-	const getSetUserTags = async () => {
-		const request = await fetch("/api/tag", {
-			method: "GET",
-			headers: {
-				"Content-Type": "application/json",
-			},
-		});
-		const response = await request.json();
-		const userTags: Tag[] = response.userTags;
-		tagPortal.setTagList(userTags);
-	};
-
 	useEffect(() => {
-		getSetUserTasks();
-		getSetUserTags();
+		taskPortal.getSetTaskList();
+		tagPortal.getSetTagList();
 	}, []);
 
 	const tagOpts = tagPortal.tagList.map((tag) => {
@@ -133,25 +110,48 @@ const TaskViewer: React.FC = () => {
 					name="name"
 					value={form.name}
 				/>
-				<Datetime
-					showTimeSelect
-					onChange={handleDateChange}
-					value={form.due ? formatDate(form.due) : undefined}
-					placeholderText="Select a due date"
-					className={styles.addDue}
-					name="due"
-				/>
-				<select
-					onChange={handleChange}
-					name="tag_id"
-					className={styles.addTag}
-					value={form.tag_id}
-				>
-					<option disabled value={-1}>
-						Add a tag
-					</option>
-					{tagOpts}
-				</select>
+				<div className={styles.addDueWrapper}>
+					<div>
+						<label
+							htmlFor="due"
+							className={styles.addDueIconWrapper}
+						>
+							<BiCalendarAlt className={styles.addDueIcon} />
+						</label>
+					</div>
+					<Datetime
+						showTimeSelect
+						onChange={handleDateChange}
+						value={form.due ? formatDate(form.due) : undefined}
+						placeholderText="Add a due date"
+						className={styles.addDue}
+						name="due"
+						autoComplete="off"
+						id="due"
+					/>
+				</div>
+
+				<div className={styles.addTagWrapper}>
+					<div>
+						<label
+							htmlFor="tag"
+							className={styles.addTagIconWrapper}
+						>
+							<AiTwotoneTag className={styles.addTagIcon} />
+						</label>
+					</div>
+					<select
+						onChange={handleChange}
+						name="tag_id"
+						className={styles.addTag}
+						value={form.tag_id}
+						id="tag"
+					>
+						<option value={-1}>Add a tag</option>
+						{tagOpts}
+					</select>
+				</div>
+
 				<textarea
 					className={styles.addDescription}
 					placeholder="Description"

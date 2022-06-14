@@ -1,11 +1,9 @@
-import type { GetServerSideProps, NextPage } from "next";
+import type { NextPage } from "next";
 import Body from "../components/Body";
 import Navbar from "../components/Navbar";
-import { getSession, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import Router from "next/router";
-import { prisma } from "../db";
-import { TodoContainer } from "../containers/TodoContainer";
-import { TagContainer } from "../containers/TagContainer";
+import Head from "next/head";
 
 export type tagList = {
 	tagList: {
@@ -49,6 +47,9 @@ const Home: NextPage = () => {
 
 	return (
 		<>
+			<Head>
+				<title>Task Dashboard</title>
+			</Head>
 			<Navbar isTaskView={true} />
 			<Body />
 		</>

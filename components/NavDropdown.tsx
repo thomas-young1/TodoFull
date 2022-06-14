@@ -1,5 +1,6 @@
 import styles from "./NavDropdown.module.css";
 import Link from "next/link";
+import { signOut } from "next-auth/react";
 
 const NavDropdown: React.FC = () => {
 	return (
@@ -11,9 +12,9 @@ const NavDropdown: React.FC = () => {
 					</Link>
 				</li>
 				<li>
-					<Link href="/auth/logout">
-						<a className={styles.link}>Log out</a>
-					</Link>
+					<a className={styles.link} onClick={() => signOut()}>
+						Log out
+					</a>
 				</li>
 			</ul>
 		</div>
