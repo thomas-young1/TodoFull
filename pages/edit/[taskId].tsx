@@ -21,7 +21,7 @@ type Props = {
 	task: Task;
 };
 
-const editTask = (props: Props) => {
+const EditTask = (props: Props) => {
 	const { task } = props;
 	const router = useRouter();
 	const { data: session, status } = useSession({
@@ -262,4 +262,4 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 	};
 };
 
-export default editTask;
+export default EditTask;

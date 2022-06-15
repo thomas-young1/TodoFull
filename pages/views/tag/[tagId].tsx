@@ -11,7 +11,7 @@ interface Props {
 	tag: Tag;
 }
 
-const taskListByTag = ({ tag }: Props) => {
+const TaskListByTag = ({ tag }: Props) => {
 	useSession({
 		required: true,
 		onUnauthenticated() {
@@ -58,4 +58,4 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 	};
 };
 
-export default taskListByTag;
+export default TaskListByTag;
