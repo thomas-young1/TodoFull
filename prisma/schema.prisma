@@ -69,7 +69,7 @@ model Task {
   description String?
   status      String    @default("Incomplete")
 
-  tag    Tag? @relation(fields: [tag_id], references: [tag_id])
+  tag    Tag? @relation(fields: [tag_id], references: [tag_id], onDelete: Cascade)
   tag_id Int?
 
   parent_task    Task?  @relation("Subtasks", fields: [parent_task_id], references: [task_id])

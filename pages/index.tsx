@@ -51,7 +51,7 @@ const Home: NextPage = () => {
 				<title>Task Dashboard</title>
 			</Head>
 			<Navbar isTaskView={true} />
-			<Body />
+			<Body view="Inbox" />
 		</>
 	);
 };

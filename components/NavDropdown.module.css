@@ -7,6 +7,7 @@
 	width: 100px;
 	border-radius: 10px;
 	overflow: hidden;
+	transform: translateX(-60px);
 }
 
 .dropdown > ul {

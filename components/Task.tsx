@@ -108,7 +108,7 @@ const Task: React.FC<Props> = ({ task, tagName }: Props) => {
 					type="checkbox"
 					className={styles.completeButton}
 					onClick={toggleStatus}
-					checked={checked}
+					defaultChecked={checked}
 					id={task.task_id.toString()}
 				></input>
 				<div

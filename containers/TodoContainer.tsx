@@ -91,6 +91,32 @@ export const useTodos = () => {
 		setTaskList(sortTasks(userTasks));
 	};
 
+	const getSetActiveTaskList = async (): Promise<void> => {
+		const request = await fetch("/api/task/active", {
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+			},
+		});
+		const response = await request.json();
+		const activeTasks: Task[] = response.activeTasks;
+
+		setTaskList(sortTasks(activeTasks));
+	};
+
+	const getSetTaskListByTag = async (tagId: number): Promise<void> => {
+		const request = await fetch(`/api/task/tag/${tagId}`, {
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+			},
+		});
+		const response = await request.json();
+		const tasksByTag: Task[] = response.tasksByTag[0].tasks;
+
+		setTaskList(sortTasks(tasksByTag));
+	};
+
 	return {
 		taskList,
 		setTaskList,
@@ -98,6 +124,8 @@ export const useTodos = () => {
 		updateTask,
 		deleteTask,
 		getSetTaskList,
+		getSetActiveTaskList,
+		getSetTaskListByTag,
 	};
 };
 

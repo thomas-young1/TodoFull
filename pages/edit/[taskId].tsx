@@ -160,9 +160,7 @@ const editTask: NextPage<Props> = (props: Props) => {
 								value={form.tag_id}
 								id="tag"
 							>
-								<option disabled value={-1}>
-									Add a tag
-								</option>
+								<option value={-1}>Add a tag</option>
 								{tagOpts}
 							</select>
 						</div>

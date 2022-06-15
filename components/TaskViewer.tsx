@@ -11,12 +11,25 @@ import { BiCalendarAlt } from "react-icons/bi";
 
 import "react-datepicker/dist/react-datepicker.css";
 
-const TaskViewer: React.FC = () => {
+type Props = {
+	view: string;
+	tagId?: number;
+};
+
+const TaskViewer: React.FC<Props> = ({ view, tagId }: Props) => {
 	const tagPortal = TagContainer.useContainer();
 	const taskPortal = TodoContainer.useContainer();
 
 	useEffect(() => {
-		taskPortal.getSetTaskList();
+		if (view === "All") {
+			taskPortal.getSetTaskList();
+		}
+		if (view === "Inbox") {
+			taskPortal.getSetActiveTaskList();
+		}
+		if (tagId && view.substring(0, 3) === "Tag") {
+			taskPortal.getSetTaskListByTag(tagId);
+		}
 		tagPortal.getSetTagList();
 	}, []);
 
@@ -97,7 +110,7 @@ const TaskViewer: React.FC = () => {
 
 	return (
 		<div className={styles.taskWrapper}>
-			<h1>Inbox</h1>
+			<h1>{view}</h1>
 			{taskObj}
 			<form className={styles.addTask} onSubmit={handleSubmit}>
 				<button className={styles.addButton} type="submit">

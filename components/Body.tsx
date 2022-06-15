@@ -2,11 +2,20 @@ import Sidebar from "./Sidebar";
 import TaskViewer from "./TaskViewer";
 import styles from "./body.module.css";
 
-const Body: React.FC = () => {
+type Props = {
+	view: string;
+	tagId?: number;
+};
+
+const Body: React.FC<Props> = ({ view, tagId }: Props) => {
 	return (
 		<div className={styles.body}>
 			<Sidebar />
-			<TaskViewer />
+			{tagId ? (
+				<TaskViewer view={view} tagId={tagId} />
+			) : (
+				<TaskViewer view={view} />
+			)}
 		</div>
 	);
 };

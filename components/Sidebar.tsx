@@ -7,7 +7,7 @@ const Sidebar: React.FC = () => {
 
 	const tagObjs = tagPortal.tagList.map((tag) => {
 		return (
-			<Link href="/" key={tag.tag_id}>
+			<Link href={`/views/tag/${tag.tag_id}`} key={tag.tag_id}>
 				{tag.name}
 			</Link>
 		);
@@ -23,7 +23,7 @@ const Sidebar: React.FC = () => {
 				<Link href="/">
 					<a>Week</a>
 				</Link>
-				<Link href="/">
+				<Link href="/views/all">
 					<a>All</a>
 				</Link>
 			</div>
