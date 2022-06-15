@@ -88,6 +88,8 @@ export const useTodos = () => {
 		const response = await request.json();
 		const userTasks: Task[] = response.userTasks;
 
+		console.log("GETSET");
+
 		setTaskList(sortTasks(userTasks));
 	};
 

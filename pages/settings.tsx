@@ -10,8 +10,7 @@ import styles from "../styles/settings.module.css";
 import { MdEdit } from "react-icons/md";
 import { BsTrashFill } from "react-icons/bs";
 
-// Style and finish features of settings page -> edit/add tags to account, delete account
-const settings: NextPage = () => {
+const settings = () => {
 	const { data: session, status } = useSession({
 		required: true,
 		onUnauthenticated() {

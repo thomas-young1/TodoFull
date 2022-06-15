@@ -21,7 +21,7 @@ type Props = {
 	task: Task;
 };
 
-const editTask: NextPage<Props> = (props: Props) => {
+const editTask = (props: Props) => {
 	const { task } = props;
 	const router = useRouter();
 	const { data: session, status } = useSession({

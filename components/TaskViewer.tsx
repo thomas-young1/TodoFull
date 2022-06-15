@@ -31,7 +31,7 @@ const TaskViewer: React.FC<Props> = ({ view, tagId }: Props) => {
 			taskPortal.getSetTaskListByTag(tagId);
 		}
 		tagPortal.getSetTagList();
-	}, []);
+	}, [tagId, view]);
 
 	const tagOpts = tagPortal.tagList.map((tag) => {
 		return (

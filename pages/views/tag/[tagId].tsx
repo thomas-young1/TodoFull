@@ -11,7 +11,7 @@ interface Props {
 	tag: Tag;
 }
 
-const taskListByTag: NextPage<Props> = ({ tag }: Props) => {
+const taskListByTag = ({ tag }: Props) => {
 	useSession({
 		required: true,
 		onUnauthenticated() {
