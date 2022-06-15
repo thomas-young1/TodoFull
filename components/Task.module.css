@@ -15,16 +15,44 @@
 	margin-right: 25px;
 }
 
-.completeButtonUnchecked {
-	border: 2px solid black;
-	border-radius: 50%;
-	height: 30px;
-	width: 30px;
-	background-color: transparent;
+.completeButton {
+	opacity: 0;
 	cursor: pointer;
+	position: absolute;
+	height: 25px;
+	width: 25px;
 }
 
-.completeButtonChecked {
+.taskLabel {
+	display: flex;
+	cursor: pointer;
+	align-items: center;
+}
+
+.customCheckbox {
+	content: "";
+	width: 25px;
+	height: 25px;
+	border-radius: 50%;
+	margin-right: 15px;
+	transition: transform 0.25s ease-in-out;
+	cursor: pointer;
+	z-index: -1;
+}
+
+.customCheckbox:hover,
+.completeButton:hover + .customCheckbox {
+	transform: scale(1.1);
+}
+
+.completeButton:focus + .customCheckbox {
+	box-shadow: 0 0 15px #989898;
+}
+
+.completeButton:checked + .customCheckbox {
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 .interactionIcons {

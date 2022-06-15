@@ -1,10 +1,11 @@
 import { format, getWeek, isTomorrow, isAfter, isSameDay } from "date-fns";
 import TaskWidget from "./TaskWidget";
-import { MdEdit } from "react-icons/md";
+import { MdEdit, MdOutlineDone } from "react-icons/md";
 import { BsTrashFill } from "react-icons/bs";
 import Router from "next/router";
 import { TodoContainer } from "../containers/TodoContainer";
 import styles from "./Task.module.css";
+import { useState } from "react";
 
 export type Props = {
 	task: {
@@ -32,7 +33,7 @@ export enum taskWidgetType {
  * @param date a date string to convert to plainer text
  * @returns a plain text representation of a datestring
  */
-export const formatDate = (date: string) => {
+export const formatDate = (date: string): string => {
 	let dueString: string;
 	const dueDate = new Date(date);
 	const now = new Date();
@@ -64,41 +65,68 @@ const Task: React.FC<Props> = ({ task, tagName }: Props) => {
 		dueString = formatDate(task.due);
 	}
 
-	let priorityClass = {};
+	/*
+		red = #ff4343
+		yellow = #ffc635
+		green = #2eb27b
+	*/
+
+	let borderColor = "#000000";
 	switch (task.priority) {
 		case 1: {
-			priorityClass = { border: "2px solid #2EB27B" };
+			borderColor = "#2eb27b";
 			break;
 		}
 		case 2: {
-			priorityClass = { border: "2px solid #FFC635" };
+			borderColor = "#ffc635";
 			break;
 		}
 		case 3: {
-			priorityClass = { border: "2px solid #FF4343" };
+			borderColor = "#ff4343";
 			break;
 		}
 	}
+
+	const [checked, setChecked] = useState(
+		task.status === "Incomplete" ? false : true
+	);
 
 	const editTaskRedirect = () => {
 		Router.push(`/edit/${task.task_id}`);
 	};
 
 	const toggleStatus = () => {
+		setChecked((prevChecked) => !prevChecked);
 		task.status = task.status === "Incomplete" ? "Complete" : "Incomplete";
 		taskPortal.updateTask(task);
 	};
 
-	// TODO: Allow tasks to be completed
 	return (
 		<div className={styles.taskWrapper}>
 			<div className={styles.wrapper}>
-				<button
-					className={styles.completeButtonUnchecked}
-					style={priorityClass}
+				<input
+					type="checkbox"
+					className={styles.completeButton}
 					onClick={toggleStatus}
-				></button>
-				<span>{task.name}</span>
+					checked={checked}
+					id={task.task_id.toString()}
+				></input>
+				<div
+					style={{
+						border: `2px solid ${borderColor}`,
+					}}
+					className={styles.customCheckbox}
+					onClick={toggleStatus}
+				>
+					{checked && <MdOutlineDone />}
+				</div>
+				<label
+					htmlFor={task.task_id.toString()}
+					className={styles.taskLabel}
+				>
+					<span>{task.name}</span>
+				</label>
+
 				{task.due && (
 					<TaskWidget
 						task={task}
@@ -131,5 +159,4 @@ const Task: React.FC<Props> = ({ task, tagName }: Props) => {
 	);
 };
 
-// TODO: subtask conditional rendering
 export default Task;
