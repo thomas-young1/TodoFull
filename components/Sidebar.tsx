@@ -20,9 +20,6 @@ const Sidebar: React.FC = () => {
 				<Link href="/">
 					<a>Inbox</a>
 				</Link>
-				<Link href="/">
-					<a>Week</a>
-				</Link>
 				<Link href="/views/all">
 					<a>All</a>
 				</Link>
@@ -32,7 +29,5 @@ const Sidebar: React.FC = () => {
 		</div>
 	);
 };
-// TODO: Style user's tags
-// TODO: Make all links functional, implement different views for tasks
 
 export default Sidebar;
