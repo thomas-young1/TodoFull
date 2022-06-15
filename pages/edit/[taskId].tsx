@@ -106,7 +106,7 @@ const editTask: NextPage<Props> = (props: Props) => {
 			</Head>
 			<Navbar isTaskView={false} />
 			<div className={styles.wrapper}>
-				<h1>Edit "{task.name}"</h1>
+				<h1>Edit {task.name}</h1>
 				<form onSubmit={handleSubmit}>
 					<div className={styles.editorWrapper}>
 						<input
